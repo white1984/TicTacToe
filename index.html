@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Tic-Tac-Toe</title>
+	<link rel="stylesheet" href="style.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:700" rel="stylesheet">
+
+	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>!
+	<div class="wrapper">
+		<div class="b-game">
+			<div class="b-game__title">Ходит игрок X</div>
+		<div class="b-game__body">
+			<div class="b-game__item"></div>
+			<div class="b-game__item"></div>
+			<div class="b-game__item"></div>
+			<div class="b-game__item"></div>
+			<div class="b-game__item"></div>
+			<div class="b-game__item"></div>
+			<div class="b-game__item"></div>
+			<div class="b-game__item"></div>
+			<div class="b-game__item"></div>
+		</div>
+		<button id="reset">Очистить</button>
+	</div>
+
+	<script type="text/babel">
+		let reset = document.querySelector('#reset'),
+			gameItem = document.querySelectorAll('.b-game__item'),
+		    gameBody = document.querySelector('.b-game__body'),
+		    title = document.querySelector('.b-game__title'),
+		    player = 'X',
+		    counter = 0,
+		    array = {
+		    	win: [
+		      	[1,2,3],
+		        [1,5,9],
+		        [1,4,7],
+		        [2,5,8],
+		        [3,6,9],
+		        [3,5,7],
+		        [4,5,6],
+		        [7,8,9]
+		      ],
+		      X: [],
+		      O: []
+		    }
+		for(let i = 0; i < gameItem.length; i++){
+			gameItem[i].node = i+1;
+		  gameItem[i].addEventListener('click', gameStep.bind(gameItem[i]));
+		};
+		/* gameItem.forEach( item => item.addEventListener('click', gameStep.bind(item))); */
+		function gameStep(){
+			counter++;
+			this.innerHTML = player;
+		  this.classList+= ` disabled ${player}`;
+		  
+		  array[player].push(this.node);
+		  if(counter > 4 && compareArrays()){
+		    title.innerHTML = `Победил игрок ${player}`;
+		    gameBody.classList.add('disabled');
+		    return;
+		  };
+		  
+		  changePlayer();
+			title.innerHTML = `Ходит игрок ${player}`;
+		  
+		  if(counter == 9)
+		  	title.innerHTML = `Ничья`
+		};
+
+		function compareArrays(){
+			for(let i = 0; i < array.win.length; i++){
+		  	if( array[player].indexOf(array.win[i][0]) != -1 ){
+		    	let j = 1;
+		      for(let k = 1; k < array.win[i].length; k++){
+		      	
+		      	if( array[player].indexOf(array.win[i][k]) != -1 ) 
+		        	j++;
+		        console.log(`${array[player]} \ ${array.win[i]} \ ${k} \ ${array[player].indexOf(array.win[i][k])} \ ${j}`);
+		        if(j == 3) return true;
+		      }
+		    }
+		    	
+		  }
+		};
+
+
+		function changePlayer(){
+			player == 'X' ? (player = 'O'):(player = 'X');
+		};
+
+		reset.addEventListener('click', resetGame);
+		function resetGame(){
+			 player = 'X';
+		   counter = 0;
+		   array.X = [];
+		   array.O = [];
+		   title.innerHTML = `Ходит игрок X`;
+		   gameBody.classList.remove('disabled');
+		   gameItem.forEach(item => {
+		   	item.innerHTML = '';
+		   	item.classList.remove("disabled", "O", "X");
+		   })
+		}
+	</script>
+</body>
+</html>
